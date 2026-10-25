@@ -1,6 +1,6 @@
 {
   "name": "@agentpet-lite/dsh-bridge",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "AgentPet Lite observer and precise desktop navigation bridge for DSH >=0.2.1-rc.2",
   "type": "module",
   "main": "lib/index.js",

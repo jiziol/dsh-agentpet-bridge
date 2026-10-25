@@ -29,7 +29,15 @@ export class AgentPetBridge extends TypertRemoteService {
     const eventSocket = config.eventSocket || path.join(process.env.AGENTPET_LOCAL_HOME || path.join(os.homedir(), '.agentpet-local'), 'agentpet.sock')
     if (!path.isAbsolute(eventSocket) || Buffer.byteLength(eventSocket) >= 104) throw new Error('invalid AgentPet eventSocket')
     const runtime = ctx as any
-    this.observer = new Observer(process.cwd(), (event: unknown) => this.publisher.send(event))
+    // Identity names the DSH profile, not the caller's working directory: ACP
+    // hosts start in the session workspace while the Desktop host starts in the
+    // profile directory. `profileContext.dir` is the host-owned profile path on
+    // every surface; cwd stays the fallback for hosts that provide no context.
+    const profileContext = runtime.get?.('profileContext') as { dir?: unknown } | undefined
+    const profilePath = typeof profileContext?.dir === 'string' && profileContext.dir.length > 0
+      ? profileContext.dir
+      : process.cwd()
+    this.observer = new Observer(profilePath, (event: unknown) => this.publisher.send(event))
     this.publisher = new Publisher(eventSocket, (gap: boolean) => this.observer.rebaseline(gap))
     this.hub = new NavigationHub(this.observer, () => ({ eventConnected: this.publisher.connected === true, eventSocket }))
     const started = this.hub.listen()
