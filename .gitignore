@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+
+# Build outputs and caches
+/.build/
+/build/
+/dist/
+*.tsbuildinfo
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+
+# Package/archive artifacts (rebuilt, not source)
+*.tgz
+
+# Coverage
+/coverage/
+/.nyc_output/
+htmlcov/
+.coverage
+
+# Logs and temporary files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tmp
+/tmp/
+*.sock
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+.npmrc
+.npmrc.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Local agent/tooling state (internal, not part of the public project)
+AGENTS.md
+.claude/
+.codex/
+.cursor/
+.agents/
+.dsh/

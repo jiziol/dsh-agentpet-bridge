@@ -1,0 +1,1 @@
+Versioned synthetic contract fixture from agentpet-lite Tests/Fixtures/dsh-bridge-v1.json. The normative protocol is agentpet-lite docs/dsh-bridge-protocol.md. This copy is a pinned conformance input; it is not a second manually maintained specification.

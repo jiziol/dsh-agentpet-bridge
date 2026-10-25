@@ -1,0 +1,3 @@
+- insert:
+    - id: agentpet-bridge
+      name: '@agentpet-lite/dsh-bridge'
