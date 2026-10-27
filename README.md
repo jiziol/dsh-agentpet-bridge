@@ -1,17 +1,22 @@
 # @agentpet-lite/dsh-bridge
 
-Independent DSH Host/Client adapter for AgentPet. MIT licensed. DSH compatibility,
+Independent DSH Host/Client adapter for AgentPet Lite. MIT licensed. DSH compatibility,
 plugin tests and prebuilt package releases are maintained in this project; AgentPet
 consumes a versioned local protocol and does not bundle or build this adapter.
 
+## Status
+
+`0.1.x`, pre-1.0. The companion AgentPet Lite app is distributed separately; this
+repository contains only the DSH adapter. See Releases for prebuilt packages.
+
 ## Install and update
 
-Use DSH's native Plugins → Add plugin manager with a published npm package version
-or a prebuilt `.tgz`. On macOS desktop use the matching desktop CLI and `desktop`
+Use DSH's native Plugins → Add plugin manager with the npm package name or a
+prebuilt `.tgz`. On macOS desktop use the matching desktop CLI and `desktop`
 Profile; `web` is a different environment. Save work and follow the host's restart
-instructions. A local candidate is not automatically available on npm.
+instructions. If the npm release is not yet available, use the `.tgz` from Releases.
 
-Published npm releases are prebuilt and require no compilation during installation.
+Release artifacts are prebuilt and require no compilation during installation.
 The same version can also be delivered as a `.tgz` for offline installation or
 rollback. Do not load the old `@acerz/dsh-agentpet-bridge` and this package together.
 The package remains independent of `@acerz/dsh-toolkit` and AionUI Team bridges.
@@ -27,8 +32,10 @@ Wire v1 lifecycle, public text and exact navigation remain supported. A read-onl
 status query works with no active sessions and advertises live Client count,
 publisher connection and capabilities. Exact agy session bindings are resolved
 inside this adapter, never by making AgentPet parse host-private files.
-The normative specification is `agentpet-lite/docs/dsh-bridge-protocol.md`;
-`protocol/` contains its pinned synthetic conformance input, not application code.
+The public protocol snapshot is [`protocol/dsh-bridge-protocol.md`](protocol/dsh-bridge-protocol.md);
+the AgentPet Lite project remains the normative owner of the contract. `protocol/`
+also contains a pinned synthetic conformance fixture, not application code.
+Building this adapter requires no AgentPet checkout.
 
 ## Build and candidate packaging
 
@@ -43,8 +50,8 @@ npm run pack:tgz
 
 `npm pack` builds before packaging; install-time prepare/postinstall scripts are
 not used. npm archives include prebuilt lib files and licenses. The Python tool
-creates a reproducible four-file offline bundle under `build/package` and never
-accesses DSH homes or installs anything. Building requires no AgentPet checkout.
+creates a reproducible four-file offline bundle and never accesses DSH homes or
+installs anything.
 `lib/observer.js`, `lib/transport.js` and their declarations are maintained sources;
 do not delete all of `lib/` before building. Keep their identities and framing
 independent of generated Typert Host/Client descriptors.
@@ -74,6 +81,15 @@ execute arbitrary commands. DSH operations remain under the native host's contro
 8. Confirm a compatible older consumer accepts a newer adapter; unknown protocol majors and unavailable capabilities are reported accurately.
 9. Verify disable/uninstall disposes sockets/timers/subscriptions and preserves host sessions/user data. Multi-window, real sleep and long-running behavior require separate evidence.
 
-Source tests, candidate packaging, host installation and natural desktop acceptance
-are distinct results. Publishing or installing requires separate authorization.
-See LICENSE, THIRD_PARTY_NOTICES.md and third-party-licenses/ for attribution.
+Source tests, packaging, host installation and natural desktop acceptance are
+distinct results; passing tests is not a claim of host acceptance.
+
+## Contributing
+
+Issues and pull requests are welcome once this repository is public. Keep protocol
+changes within the compatibility rules and include tests with each change.
+
+## License
+
+MIT. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+for attribution.

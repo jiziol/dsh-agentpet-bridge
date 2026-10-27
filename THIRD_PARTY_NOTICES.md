@@ -14,3 +14,7 @@ The bridge's own source code is MIT, Copyright (c) 2026 acerz. The original
 AgentPet application and pet animation assets have separate notices in the
 AgentPet Lite repository; their authors are not attributed as authors of this
 independently maintained DSH bridge.
+
+The protocol snapshot in `protocol/dsh-bridge-protocol.md` is provided by the
+AgentPet Lite project under the MIT license; the AgentPet Lite application and
+its own notices are maintained separately.
