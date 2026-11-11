@@ -7,16 +7,16 @@ consumes a versioned local protocol and does not bundle or build this adapter.
 ## Status
 
 `0.1.x`, pre-1.0. The companion AgentPet Lite app is distributed separately; this
-repository contains only the DSH adapter. The current local candidate is `0.1.11`;
-no public npm package or GitHub Release is available yet. Prebuilt download links
-will be added when publication is complete.
+repository contains only the DSH adapter. The current npm release is `0.1.12`
+(https://www.npmjs.com/package/@agentpet-lite/dsh-bridge). The source repository is
+being prepared for public release; prebuilt download links will be added with it.
 
 ## Install and update
 
 Use DSH's native Plugins → Add plugin manager with the npm package name or a
 prebuilt `.tgz`. On macOS desktop use the matching desktop CLI and `desktop`
 Profile; `web` is a different environment. Save work and follow the host's restart
-instructions. Use a verified prebuilt `.tgz` while the npm release is unavailable.
+instructions. Use a verified prebuilt `.tgz` for offline installation or rollback.
 
 Release artifacts are prebuilt and require no compilation during installation.
 The same version can also be delivered as a `.tgz` for offline installation or
@@ -74,8 +74,9 @@ Building this adapter requires no AgentPet checkout.
 
 Use Node.js 22+ and Python 3.9+; the CI workflow uses Node.js 22 and Python 3.12.
 The last recorded desktop-host connection check used DSH 0.2.1-rc.5 with bridge
-0.1.10. The 0.1.11 candidate passed an isolated rc.5 web Host/Client smoke check;
-desktop installation and natural use acceptance are still pending.
+0.1.10. Bridge 0.1.11 passed an isolated rc.5 web Host/Client smoke check; 0.1.12 is
+a documentation-only patch. Desktop installation and natural use acceptance for the
+current release are still pending.
 
 ```sh
 npm ci --ignore-scripts --legacy-peer-deps
