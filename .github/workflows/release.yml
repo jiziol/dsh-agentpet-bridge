@@ -86,3 +86,14 @@ jobs:
             --notes-file release-notes.md \
             "${prerelease[@]}" \
             "${assets[@]}"
+      - name: Remind manual npm publish
+        run: |
+          echo "### npm publish is still manual" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "The GitHub Release was created. To publish the npm package, run:" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo '```sh' >> "$GITHUB_STEP_SUMMARY"
+          echo "npm publish --access public" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Complete 2FA, then verify with \`npm view @agentpet-lite/dsh-bridge version\`. See [RELEASING.md](RELEASING.md)." >> "$GITHUB_STEP_SUMMARY"
