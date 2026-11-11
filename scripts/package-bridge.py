@@ -26,6 +26,10 @@ ROOT_FILES = {
     "package.json", "cordis.patch.yml", "README.md", "LICENSE",
     "THIRD_PARTY_NOTICES.md",
 }
+BUNDLED_LICENSE_FILES = {
+    "third-party-licenses/Zod-4.6.7-LICENSE.txt",
+    "third-party-licenses/DSH-Typert-Protocol-0.2.1-rc.2-LICENSE.txt",
+}
 HEX = re.compile(r"[0-9a-f]{64}\Z")
 VERSION = re.compile(r"[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?\Z")
 
@@ -113,6 +117,9 @@ def collect(source):
     files = {name: regular_bytes(source / name) for name in sorted(ROOT_FILES)}
     files.update(collect_tree(source, "lib", lambda name: name.endswith((".js", ".d.ts"))))
     files.update(collect_tree(source, "third-party-licenses", lambda name: name.endswith((".txt", ".md"))))
+    for name in sorted(BUNDLED_LICENSE_FILES):
+        if not files.get(name, b"").strip():
+            raise ValueError("Required bundled dependency license missing or empty: " + name)
     package = read_json(files["package.json"])
     if package.get("name") != PACKAGE or not VERSION.fullmatch(package.get("version", "")):
         raise ValueError("Unexpected bridge package name or version")
@@ -212,8 +219,23 @@ def instructions(archive, version, dsh_version):
    DSH_HOME='<your-absolute-dsh-home>' dsh plugin --profile desktop add '<your-extracted-directory>/%s' --ignore-scripts --save-exact --yes
    ```
 
-5. 启动 AgentPet Lite 与 DSH，确认 bridge 的 Host / Client 均加载，再实际检查
-   任务状态、公开回复气泡及点击回到对应会话。文件校验通过不等于运行验收通过。
+5. 首次使用正式 Lite 时，在 DSH 原生插件管理器中把 bridge Host 配置的
+   `eventSocket` 设置为 Lite 数据目录内 `agentpet.sock` 的完整绝对路径。
+   macOS 默认 Lite 路径可用下列命令打印，复制输出到配置字段：
+
+   ```sh
+   printf '%%s/.agentpet-lite/agentpet.sock\\n' "$HOME"
+   ```
+
+   配置字段不展开 `~`、`$HOME` 或相对路径。自定义 Lite 数据目录用实际路径。
+   空配置保留旧 Local 行为：优先 DSH 进程环境的 `AGENTPET_LOCAL_HOME`，
+   否则是其用户目录中的 `.agentpet-local/agentpet.sock`。全新 Lite 没有旧迁移
+   兼容端点，必须显式设置 Lite 路径；仍用 Local 的用户保留原显式路径或默认值。
+   升级本包不会改写配置或迁移数据；从 Local 切换 Lite 时需核对该字段。
+6. 保存配置并按 DSH 指引重启，启动 Lite。在 Lite 选择相应 DSH 桌面应用并点
+   Test，核对目标实例、协议与事件连接，并复核已配置的 socket 路径；有效 Client
+   加载后再核对导航／待办能力。无活动任务即可检查连接，无需发模型任务。
+   自然任务状态、公开回复气泡及点击回到会话分别验收，技术检查不能代替。
    本包只提供 bridge，不包含课程护栏、侧栏或其他 toolkit 功能。
 
 ## 卸载与回退

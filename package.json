@@ -1,7 +1,15 @@
 {
   "name": "@agentpet-lite/dsh-bridge",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "AgentPet Lite observer and precise desktop navigation bridge for DSH >=0.2.1-rc.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiziol/dsh-agentpet-bridge.git"
+  },
+  "homepage": "https://github.com/jiziol/dsh-agentpet-bridge#readme",
+  "bugs": {
+    "url": "https://github.com/jiziol/dsh-agentpet-bridge/issues"
+  },
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -50,7 +58,7 @@
     "@deepseek-ai/dsh-client-ui-session": ">=0.2.1-rc.2",
     "@deepseek-ai/dsh-client-ui-workspace": ">=0.2.1-rc.2",
     "@deepseek-ai/dsh-typert-protocol": ">=0.2.1-rc.2",
-    "@deepseek-ai/schemastery": "3.18.4",
+    "@deepseek-ai/schemastery": "^3.18.4",
     "zod": "^4.4.3"
   },
   "devDependencies": {

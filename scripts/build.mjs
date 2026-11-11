@@ -46,8 +46,35 @@ await writeFile(path.join(root, 'lib/typert.host.d.ts'), artifact.dts)
 await writeFile(path.join(root, 'lib/typert.remote-client.js'), artifact.remote.js)
 await writeFile(path.join(root, 'lib/typert.remote-client.d.ts'), artifact.remote.dts)
 const body = (await readFile(path.join(root, 'src/client-body.js'), 'utf8')).replace("return { apply, inject:", "export default { apply, inject:")
-const bundle = buildSync({ stdin: { contents: "import TYPERT_REMOTE from './lib/typert.remote-client.js'\n" + body, resolveDir: root },
-  bundle: true, platform: 'browser', format: 'cjs', target: 'es2022', write: false, minify: true }).outputFiles[0].text
+const result = buildSync({ stdin: { contents: "import TYPERT_REMOTE from './lib/typert.remote-client.js'\n" + body, resolveDir: root },
+  bundle: true, platform: 'browser', format: 'cjs', target: 'es2022', write: false, minify: true, metafile: true })
+// Validate the dependencies actually shipped in the Client, including small
+// helper implementations that also happen to be declared as Host peers.
+const bundledLicenses = new Map([
+  ['zod', ['4.6.7', 'Zod-4.6.7-LICENSE.txt']],
+  ['@deepseek-ai/dsh-typert-protocol', ['0.2.1-rc.2', 'DSH-Typert-Protocol-0.2.1-rc.2-LICENSE.txt']],
+])
+const bundledPackages = new Set()
+for (const output of Object.values(result.metafile.outputs)) {
+  for (const [input, contribution] of Object.entries(output.inputs)) {
+    if (contribution.bytesInOutput === 0) continue
+    const dependency = input.match(/(?:^|\/)node_modules\/((?:@[^/]+\/)?[^/]+)\//)?.[1]
+    if (dependency) bundledPackages.add(dependency)
+  }
+}
+for (const dependency of bundledPackages) {
+  const notice = bundledLicenses.get(dependency)
+  if (!notice) throw new Error(`Bundled dependency needs a license review: ${dependency}`)
+  const [version, filename] = notice
+  const directory = path.join(root, 'node_modules', dependency)
+  const installed = JSON.parse(await readFile(path.join(directory, 'package.json'), 'utf8'))
+  const upstream = await readFile(path.join(directory, 'LICENSE'))
+  const distributed = await readFile(path.join(root, 'third-party-licenses', filename))
+  if (installed.version !== version || !upstream.equals(distributed)) {
+    throw new Error(`Bundled license/version mismatch: ${dependency}`)
+  }
+}
+const bundle = result.outputFiles[0].text
 await writeFile(path.join(root, 'lib/client.js'), `window.__ModuleLoader__.load({ id: '@agentpet-lite/dsh-bridge', factory: (require) => {
 const module = { exports: {} }; const exports = module.exports;
 ${bundle}

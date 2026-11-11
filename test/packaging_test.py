@@ -47,7 +47,8 @@ class BridgePackagingTests(unittest.TestCase):
         (self.source / "lib/index.js").write_text("export { value } from './value.js';\n")
         (self.source / "lib/value.js").write_text("export const value = 1;\n")
         (self.source / "lib/index.d.ts").write_text("export declare const value: number;\n")
-        (self.source / "third-party-licenses/Zod-LICENSE.txt").write_text("Fixture MIT license\n")
+        for name in ("Zod-4.6.7-LICENSE.txt", "DSH-Typert-Protocol-0.2.1-rc.2-LICENSE.txt"):
+            (self.source / "third-party-licenses" / name).write_text("Fixture MIT license\n")
         for name in ("src/not-runtime.ts", "test/not-runtime.test.js", "node_modules/secret", ".build/staging", "credentials.json"):
             (self.source / name).write_text("excluded development data\n")
 
@@ -202,7 +203,9 @@ class BridgePackagingTests(unittest.TestCase):
             PACK.package_bridge(self.source, out_parent / "out")
 
     def test_runtime_entries_and_license_files_are_required(self):
-        for name in ("lib/index.js", "lib/value.js", "lib/index.d.ts", "LICENSE", "THIRD_PARTY_NOTICES.md", "third-party-licenses/Zod-LICENSE.txt"):
+        for name in ("lib/index.js", "lib/value.js", "lib/index.d.ts", "LICENSE", "THIRD_PARTY_NOTICES.md",
+                     "third-party-licenses/Zod-4.6.7-LICENSE.txt",
+                     "third-party-licenses/DSH-Typert-Protocol-0.2.1-rc.2-LICENSE.txt"):
             with self.subTest(name=name):
                 path = self.source / name
                 data = path.read_bytes()

@@ -7,19 +7,52 @@ consumes a versioned local protocol and does not bundle or build this adapter.
 ## Status
 
 `0.1.x`, pre-1.0. The companion AgentPet Lite app is distributed separately; this
-repository contains only the DSH adapter. See Releases for prebuilt packages.
+repository contains only the DSH adapter. The current local candidate is `0.1.11`;
+no public npm package or GitHub Release is available yet. Prebuilt download links
+will be added when publication is complete.
 
 ## Install and update
 
 Use DSH's native Plugins → Add plugin manager with the npm package name or a
 prebuilt `.tgz`. On macOS desktop use the matching desktop CLI and `desktop`
 Profile; `web` is a different environment. Save work and follow the host's restart
-instructions. If the npm release is not yet available, use the `.tgz` from Releases.
+instructions. Use a verified prebuilt `.tgz` while the npm release is unavailable.
 
 Release artifacts are prebuilt and require no compilation during installation.
 The same version can also be delivered as a `.tgz` for offline installation or
 rollback. Do not load the old `@acerz/dsh-agentpet-bridge` and this package together.
 The package remains independent of `@acerz/dsh-toolkit` and AionUI Team bridges.
+
+### Connect to AgentPet Lite
+
+For a fresh Lite installation, set the bridge Host configuration field
+`eventSocket` in DSH's native plugin manager **before starting new tasks**.
+Use the complete absolute path to `agentpet.sock` in your Lite data directory.
+On macOS, print the normal Lite path with:
+
+```sh
+printf '%s/.agentpet-lite/agentpet.sock\n' "$HOME"
+```
+
+Copy the printed path into `eventSocket`. Do not enter `~`, `$HOME`, or a relative
+path in that field: the plugin does not expand shell expressions. If your Lite
+installation uses a custom data directory, use its actual socket path instead.
+Save the configuration and follow DSH's restart instructions, then start Lite.
+In Lite, select the matching DSH desktop application and click **Test**. Confirm
+that the selected instance, protocol and event connection succeed; with one live
+DSH Client, also check the advertised navigation/pending capabilities. Zero active
+tasks are sufficient for this connection check; it does not create a model task.
+Natural task updates and precise navigation need separate use verification.
+
+Existing AgentPet Local users can retain their explicit `eventSocket`, or set its
+complete absolute path to `.agentpet-local/agentpet.sock` under their home.
+An empty setting preserves the legacy default: `AGENTPET_LOCAL_HOME/agentpet.sock`
+when that environment variable is set in the **DSH process**, otherwise
+`.agentpet-local/agentpet.sock` under DSH's home directory. Lite users must set the
+explicit Lite path; a fresh installation has no Local migration endpoint. The
+bridge sends to one configured socket and does not choose between apps by probing
+or changing their data directories. Moving from Local to Lite requires reviewing
+this setting; updating the plugin does not rewrite it or migrate user data.
 
 ## Compatibility
 
@@ -32,12 +65,17 @@ Wire v1 lifecycle, public text and exact navigation remain supported. A read-onl
 status query works with no active sessions and advertises live Client count,
 publisher connection and capabilities. Exact agy session bindings are resolved
 inside this adapter, never by making AgentPet parse host-private files.
-The public protocol snapshot is [`protocol/dsh-bridge-protocol.md`](protocol/dsh-bridge-protocol.md);
-the AgentPet Lite project remains the normative owner of the contract. `protocol/`
+A source checkout includes the pinned public protocol snapshot at
+`protocol/dsh-bridge-protocol.md`; the AgentPet Lite project remains the normative owner of the contract. `protocol/`
 also contains a pinned synthetic conformance fixture, not application code.
 Building this adapter requires no AgentPet checkout.
 
 ## Build and candidate packaging
+
+Use Node.js 22+ and Python 3.9+; the CI workflow uses Node.js 22 and Python 3.12.
+The last recorded desktop-host connection check used DSH 0.2.1-rc.5 with bridge
+0.1.10. The 0.1.11 candidate passed an isolated rc.5 web Host/Client smoke check;
+desktop installation and natural use acceptance are still pending.
 
 ```sh
 npm ci --ignore-scripts --legacy-peer-deps
@@ -58,9 +96,9 @@ independent of generated Typert Host/Client descriptors.
 
 ## Boundaries
 
-EventSocket config is an absolute same-user Unix socket; empty uses the local
-AgentPet data socket. Only lifecycle metadata and a bounded current public-text
-preview leave DSH. No reasoning, tool arguments, credentials or user answers are
+EventSocket config is an absolute same-user Unix socket; empty preserves the
+legacy AgentPet Local default described above. Only lifecycle metadata and a
+bounded current public-text preview leave DSH. No reasoning, tool arguments, credentials or user answers are
 published. Baselines/reconnects do not replay old text or invent completions.
 Queues, frames and session counts are bounded. Navigation validates exact
 Profile/Host/Client generation/request/session identity; timeout or ambiguity
