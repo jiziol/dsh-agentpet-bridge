@@ -9,7 +9,7 @@ consumes a versioned local protocol and does not bundle or build this adapter.
 `0.1.x`, pre-1.0. The companion AgentPet Lite app is distributed separately; this
 repository contains only the DSH adapter. The current npm release is `0.1.12`
 (https://www.npmjs.com/package/@agentpet-lite/dsh-bridge). The source repository is
-being prepared for public release; prebuilt download links will be added with it.
+public at https://github.com/jiziol/dsh-agentpet-bridge.
 
 ## Install and update
 
@@ -75,8 +75,9 @@ Building this adapter requires no AgentPet checkout.
 Use Node.js 22+ and Python 3.9+; the CI workflow uses Node.js 22 and Python 3.12.
 The last recorded desktop-host connection check used DSH 0.2.1-rc.5 with bridge
 0.1.10. Bridge 0.1.11 passed an isolated rc.5 web Host/Client smoke check; 0.1.12 is
-a documentation-only patch. Desktop installation and natural use acceptance for the
-current release are still pending.
+a documentation-only patch. Bridge 0.1.12 was then verified running with DSH
+0.2.2-rc.1 for status, Client loading and event connection; natural desktop use
+acceptance remains separate.
 
 ```sh
 npm ci --ignore-scripts --legacy-peer-deps
@@ -125,8 +126,8 @@ distinct results; passing tests is not a claim of host acceptance.
 
 ## Contributing
 
-Issues and pull requests are welcome once this repository is public. Keep protocol
-changes within the compatibility rules and include tests with each change.
+Issues and pull requests are welcome. Keep protocol changes within the compatibility
+rules and include tests with each change.
 
 ## License
 
